@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ck Baking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Caveat:wght@500;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF4E9;
+    --paper:#FFFDF8;
+    --plum:#8C5468;
+    --plum-deep:#6B3E4E;
+    --sage:#8FA083;
+    --ink:#3A2A24;
+    --line:#E4D8C4;
+    --gold:#C9A15A;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    font-weight:300;
+    line-height:1.6;
+  }
+  /* notebook line texture on body background */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:repeating-linear-gradient(to bottom, transparent, transparent 37px, var(--line) 38px);
+    opacity:.35;
+    pointer-events:none;
+    z-index:0;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    color:var(--plum-deep);
+    margin:0 0 .3em 0;
+  }
+  .script{
+    font-family:'Caveat',cursive;
+    font-weight:700;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* ===== Header ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--cream);
+    border-bottom:1px solid var(--line);
+  }
+  .header-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px;
+    max-width:1100px; margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .logo-circle{
+    width:52px; height:52px; border-radius:50%;
+    border:2px solid var(--plum);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Caveat',cursive; font-weight:700; font-size:1.4rem;
+    color:var(--plum); background:var(--paper);
+    flex-shrink:0;
+  }
+  .brand-name{
+    font-family:'Fraunces',serif; font-weight:600; font-size:1.5rem;
+    color:var(--plum-deep); letter-spacing:.5px;
+  }
+  .burger{
+    background:none; border:none; cursor:pointer;
+    width:40px; height:40px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+  }
+  .burger span{
+    width:26px; height:2px; background:var(--plum-deep); display:block; transition:.25s;
+  }
+  .burger.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2){ opacity:0; }
+  .burger.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  /* ===== Nav drawer ===== */
+  nav.drawer{
+    max-height:0; overflow:hidden;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    transition:max-height .35s ease;
+  }
+  nav.drawer.open{ max-height:900px; }
+  .drawer-inner{ max-width:1100px; margin:0 auto; padding:6px 20px 22px; }
+  .drawer-inner > a.top-link{
+    display:block; padding:12px 4px; font-size:1.05rem;
+    border-bottom:1px solid var(--line); text-decoration:none; color:var(--ink);
+  }
+  .drawer-inner > a.top-link:hover{ color:var(--plum); }
+  details.products{ border-bottom:1px solid var(--line); }
+  details.products summary{
+    list-style:none; cursor:pointer;
+    padding:12px 4px; font-size:1.05rem;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  details.products summary::-webkit-details-marker{ display:none; }
+  details.products summary::after{
+    content:"›"; font-size:1.3rem; transform:rotate(90deg); transition:.25s; color:var(--plum);
+  }
+  details.products[open] summary::after{ transform:rotate(270deg); }
+  .product-list{ list-style:none; margin:0 0 10px 0; padding:0 0 0 14px; }
+  .product-list li a{
+    display:flex; gap:10px; align-items:baseline;
+    padding:8px 4px; text-decoration:none; color:var(--ink);
+    font-size:.98rem;
+  }
+  .product-list li a:hover{ color:var(--plum); }
+  .product-list li a .num{
+    font-family:'Fraunces',serif; font-style:italic; color:var(--gold); font-size:.85rem; width:1.4em;
+  }
+
+  /* ===== Hero ===== */
+  .hero{
+    max-width:1100px; margin:0 auto; padding:46px 20px 30px;
+    display:grid; grid-template-columns:1fr; gap:28px;
+    position:relative; z-index:1;
+  }
+  .hero-frame{
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:14px;
+    box-shadow:0 10px 26px -14px rgba(58,42,36,.35);
+    transform:rotate(-.6deg);
+  }
+  .hero-photo{
+    aspect-ratio:4/3;
+    background:
+      radial-gradient(circle at 30% 30%, #f3e4e9 0%, transparent 55%),
+      linear-gradient(135deg, #d9b6c2 0%, var(--plum) 55%, var(--plum-deep) 100%);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; color:#fff; padding:20px;
+  }
+  .hero-photo span{
+    font-family:'Caveat',cursive; font-size:1.7rem; opacity:.95;
+  }
+  .hero-caption{
+    text-align:center; font-family:'Caveat',cursive; font-size:1.2rem;
+    color:var(--plum-deep); margin-top:10px;
+  }
+  .hero-text{ text-align:center; padding:0 6px; }
+  .hero-text .eyebrow{
+    font-family:'Caveat',cursive; color:var(--gold); font-size:1.3rem;
+  }
+  .hero-text h1{ font-size:2.3rem; line-height:1.15; }
+  .hero-text p{ max-width:46ch; margin:12px auto 0; color:#5a453d; }
+  .cta-row{ margin-top:22px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:12px 26px; border-radius:2px;
+    text-decoration:none; font-size:.95rem; letter-spacing:.03em;
+    border:1px solid var(--plum);
+  }
+  .btn.primary{ background:var(--plum); color:#fff; }
+  .btn.ghost{ color:var(--plum-deep); }
+
+  /* ===== Sections ===== */
+  section{
+    max-width:1100px; margin:0 auto; padding:60px 20px;
+    position:relative; z-index:1;
+  }
+  .section-head{ text-align:center; margin-bottom:36px; }
+  .section-head .tag{ font-family:'Caveat',cursive; color:var(--gold); font-size:1.25rem; display:block; }
+  .section-head h2{ font-size:2rem; }
+  hr.torn{
+    border:none; height:1px; background:var(--line); max-width:1100px; margin:0 auto;
+  }
+
+  /* products grid on page */
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px;
+  }
+  .card{
+    background:var(--paper); border:1px solid var(--line);
+    padding:18px 14px; text-align:center;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .card:hover{ transform:translateY(-4px); box-shadow:0 12px 20px -14px rgba(58,42,36,.4); }
+  .card .n{ font-family:'Fraunces',serif; font-style:italic; color:var(--gold); font-size:.85rem; }
+  .card .ic{ font-size:1.8rem; margin:8px 0; }
+  .card .name{ font-family:'Fraunces',serif; font-weight:600; color:var(--plum-deep); font-size:.98rem; }
+
+  /* about */
+  .about-wrap{ display:grid; grid-template-columns:1fr; gap:24px; align-items:center; }
+  .about-photo{
+    aspect-ratio:1/1; max-width:220px; margin:0 auto;
+    border-radius:50%; border:2px solid var(--plum);
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper); font-family:'Caveat',cursive; color:var(--plum); font-size:1.1rem; text-align:center; padding:10px;
+  }
+  .about-text{ max-width:60ch; margin:0 auto; text-align:center; color:#5a453d; }
+
+  /* contact */
+  .contact-card{
+    background:var(--paper); border:1px solid var(--line);
+    padding:34px 26px; max-width:480px; margin:0 auto; text-align:center;
+  }
+  .contact-card p{ margin:6px 0; }
+  .socials{ margin-top:20px; display:flex; gap:18px; justify-content:center; }
+  .socials a{
+    width:42px; height:42px; border:1px solid var(--plum); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; text-decoration:none;
+    color:var(--plum-deep); font-size:.95rem;
+  }
+  .socials a:hover{ background:var(--plum); color:#fff; }
+
+  footer{
+    text-align:center; padding:30px 20px 50px;
+    font-size:.85rem; color:#8a7268; position:relative; z-index:1;
+  }
+
+  @media(min-width:760px){
+    .hero{ grid-template-columns:1fr 1fr; align-items:center; }
+    .hero-text{ text-align:left; padding:0 20px; }
+    .hero-text p{ margin:12px 0 0; }
+    .cta-row{ justify-content:flex-start; }
+    .about-wrap{ grid-template-columns:220px 1fr; }
+    .about-text{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-bar">
+    <div class="brand">
+      <div class="logo-circle">Ck</div>
+      <div class="brand-name">Ck Baking</div>
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Meny" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="drawer" id="drawer">
+    <div class="drawer-inner">
+      <a class="top-link" href="#hjem">Hjemside</a>
+
+      <details class="products">
+        <summary>Våre produkter</summary>
+        <ul class="product-list">
+          <li><a href="#produkter"><span class="num">01</span> Porsjonsdesserter</a></li>
+          <li><a href="#produkter"><span class="num">02</span> Cookies</a></li>
+          <li><a href="#produkter"><span class="num">03</span> Cupcakes</a></li>
+          <li><a href="#produkter"><span class="num">04</span> Gjørbakst</a></li>
+          <li><a href="#produkter"><span class="num">05</span> Utleie</a></li>
+          <li><a href="#produkter"><span class="num">06</span> Cakepops</a></li>
+          <li><a href="#produkter"><span class="num">07</span> Makroner</a></li>
+          <li><a href="#produkter"><span class="num">08</span> Donuts</a></li>
+          <li><a href="#produkter"><span class="num">09</span> Brownies</a></li>
+          <li><a href="#produkter"><span class="num">10</span> Andre søte fristelser</a></li>
+        </ul>
+      </details>
+
+      <a class="top-link" href="#om-oss">Om oss</a>
+      <a class="top-link" href="#kontakt">Kontakt oss</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero" id="hjem">
+    <div class="hero-frame">
+      <div class="hero-photo"><span>bilde fra bryllup</span></div>
+      <div class="hero-caption">— et utvalg fra en av våre bryllupsleveranser</div>
+    </div>
+    <div class="hero-text">
+      <span class="eyebrow">Hjemmebakt, med kjærlighet</span>
+      <h1>Søtsaker laget for hånd,<br>til dagene som betyr noe</h1>
+      <p>Ck Baking lager kaker, cupcakes, donuts og andre søte fristelser til bryllup, konfirmasjon og alle anledninger som fortjener litt ekstra.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#produkter">Se produktene</a>
+        <a class="btn ghost" href="#kontakt">Ta kontakt</a>
+      </div>
+    </div>
+  </div>
+
+  <hr class="torn">
+
+  <section id="produkter">
+    <div class="section-head">
+      <span class="tag">fra kjøkkenbenken vår</span>
+      <h2>Våre produkter</h2>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="n">01</div><div class="ic">🍮</div><div class="name">Porsjonsdesserter</div></div>
+      <div class="card"><div class="n">02</div><div class="ic">🍪</div><div class="name">Cookies</div></div>
+      <div class="card"><div class="n">03</div><div class="ic">🧁</div><div class="name">Cupcakes</div></div>
+      <div class="card"><div class="n">04</div><div class="ic">🥐</div><div class="name">Gjørbakst</div></div>
+      <div class="card"><div class="n">05</div><div class="ic">🎪</div><div class="name">Utleie</div></div>
+      <div class="card"><div class="n">06</div><div class="ic">🍭</div><div class="name">Cakepops</div></div>
+      <div class="card"><div class="n">07</div><div class="ic">🌈</div><div class="name">Makroner</div></div>
+      <div class="card"><div class="n">08</div><div class="ic">🍩</div><div class="name">Donuts</div></div>
+      <div class="card"><div class="n">09</div><div class="ic">🍫</div><div class="name">Brownies</div></div>
+      <div class="card"><div class="n">10</div><div class="ic">✨</div><div class="name">Andre søte fristelser</div></div>
+    </div>
+  </section>
+
+  <hr class="torn">
+
+  <section id="om-oss">
+    <div class="section-head">
+      <span class="tag">historien vår</span>
+      <h2>Om oss</h2>
+    </div>
+    <div class="about-wrap">
+      <div class="about-photo">bilde av baker</div>
+      <div class="about-text">
+        <p>Ck Baking startet som en lidenskap for baking i eget kjøkken, og har vokst til å lage søtsaker for bryllup, konfirmasjoner og andre feiringer. Hver bestilling lages for hånd, med gode råvarer og øye for detaljer — fra den første skissen til den siste blomsten på en donut.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="torn">
+
+  <section id="kontakt">
+    <div class="section-head">
+      <span class="tag">vi vil gjerne høre fra deg</span>
+      <h2>Kontakt oss</h2>
+    </div>
+    <div class="contact-card">
+      <p><strong>E-post</strong></p>
+      <p><a href="mailto:ck.baking.no@gmail.com">ck.baking.no@gmail.com</a></p>
+      <p style="margin-top:18px;">Send oss gjerne en melding om hva du drømmer om til din anledning, så tar vi det derfra.</p>
+      <div class="socials">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="Instagram">ig</a>
+        <a href="#" title="TikTok">tt</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span> Ck Baking · ck-baking.no
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const burger = document.getElementById('burgerBtn');
+  const drawer = document.getElementById('drawer');
+  burger.addEventListener('click', () => {
+    const isOpen = drawer.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', isOpen);
+  });
+  document.querySelectorAll('nav.drawer a').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      drawer.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+</script>
+
+</body>
+</html>
